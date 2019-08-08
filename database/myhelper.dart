@@ -51,29 +51,21 @@ class DatabaseHelper {
     return ourDb;
   }
 
-  /*
-     id | username | password
-     ------------------------
-     1  | Paulo    | paulo
-     2  | James    | bond
-   */
+
 
   void _onCreate(Database db, int newVersion) async {
     await db.execute(
         "CREATE TABLE $tableUser($columnId INTEGER PRIMARY KEY, $columnName TEXT, $columnPhone TEXT, $columnAddress TEXT, $columnGroup INTEGER)");
   }
 
-  //CRUD - CREATE, READ, UPDATE , DELETE
-
-  //Insertion
   Future<int> saveStudent(Student student) async {
     var dbClient = await db;
     int res = await dbClient.insert("$tableUser", student.toMap());
     return res;
   }
 
-  //Get Users
-   Future<List> getAllStudents() async {
+  
+  Future<List> getAllStudents() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery("SELECT * FROM $tableUser");
 
@@ -90,7 +82,6 @@ class DatabaseHelper {
     var dbClient = await db;
 
     var result = await dbClient.rawQuery("SELECT * FROM $tableUser WHERE $columnGroup = $num");
-    print(result);
     return  result;
   }
 
@@ -120,6 +111,14 @@ class DatabaseHelper {
     var dbClient = await db;
     int res = await dbClient.insert("$tableScores", scores.toMap());
     return res;
+  }
+  Future<List<Map<String,dynamic>>> getScore(int id, int month, int session) async {
+    print("hi");
+    var dbClient = await db;
+
+    var result = await dbClient.query(tableScores,columns: [colPresence,colSheet,colExam,colBonus],where: '$colStudentId=? and $colMonth=? and $colSession=?',whereArgs: [id,month,session]);
+    print(result);
+    return  result;
   }
 
 }
