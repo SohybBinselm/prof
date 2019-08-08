@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:professor/database/myhelper.dart';
 import 'package:professor/database/student_score.dart';
+import 'package:toast/toast.dart';
 
 class Score extends StatefulWidget {
   @override
   _ScoreState createState() => _ScoreState();
 }
-
+List l;
 class _ScoreState extends State<Score> {
   TextEditingController presence= TextEditingController();
   TextEditingController sheet= TextEditingController();
@@ -16,10 +17,9 @@ class _ScoreState extends State<Score> {
 
   @override
   Widget build(BuildContext context) {
-    List l = ModalRoute.of(context).settings.arguments;
-
-
+     l = ModalRoute.of(context).settings.arguments;
     return Scaffold(
+
       appBar: AppBar(
         title: Text("Score"),
       ),
@@ -75,12 +75,19 @@ class _ScoreState extends State<Score> {
               }
 
             }),
+        RaisedButton(child: Text("showdata"),
+        onPressed: showData,
+        )
       ],),
     );
   }
 
   void insertScore(Scores scr) async {
     await helper.saveScore(scr);
+  }
+
+  void showData() async{
+    Toast.show("${await helper.getScore(l[0], l[1], l[2])}", context);
   }
 }
 void _showAlertMessage(BuildContext context, String message) {
